@@ -12,7 +12,39 @@ logger = logging.getLogger(__file__)
 
 
 def get_product_list(last_id, client_id, seller_token):
-    """Получить список товаров магазина озон"""
+    """Get a list of OZON store products.
+
+    Args:
+        last_id (str): ID of the last value on the page.
+            An empty value for the first request.
+        client_id (str): OZON API client ID.
+        seller_token (str): OZON API Key.
+
+    Returns:
+        Returns the result as a list of products.
+
+        {
+            "result": {
+                "items": [
+                    {
+                        "product_id": 223681945,
+                        "offer_id": "136748"
+                    }
+                ],
+                "total": 1,
+                "last_id": "bnVсbA=="
+            }
+        }
+
+    Raises:
+        Code 400: Invalid parameter.
+        Code 403: Access denied.
+        Code 404: The answer was not found.
+        Code 409: Request conflict.
+        Code 500: Inside server error.
+
+    """
+
     url = "https://api-seller.ozon.ru/v2/product/list"
     headers = {
         "Client-Id": client_id,
@@ -31,8 +63,18 @@ def get_product_list(last_id, client_id, seller_token):
     return response_object.get("result")
 
 
-def get_offer_ids(client_id, seller_token):
-    """Получить артикулы товаров магазина озон"""
+def get_offer_ids(client_id, seller_token)
+    """Get the IDs of the OZON store's products.
+
+    Args:
+        client_id (str): OZON API client ID.
+        seller_token (str): OZON API Key.
+
+    Returns:
+        Returns a list of product IDs.
+
+    """
+
     last_id = ""
     product_list = []
     while True:
@@ -75,7 +117,12 @@ def update_stocks(stocks: list, client_id, seller_token):
 
 
 def download_stock():
-    """Скачать файл ostatki с сайта casio"""
+    """Downloads the leftover file.
+
+    Returns:
+        Returns a dict of watch remnants.
+
+    """
     # Скачать остатки с сайта
     casio_url = "https://timeworld.ru/upload/files/ostatki.zip"
     session = requests.Session()
@@ -96,6 +143,18 @@ def download_stock():
 
 
 def create_stocks(watch_remnants, offer_ids):
+    """Create a stock list.
+
+    Args:
+        watch_remnants (dict): dictionary with the number
+            of remaining watch on the site.
+        offer_ids (list): list of product IDs.
+
+    Returns:
+        Returns a list of stocks.
+
+    """
+
     # Уберем то, что не загружено в seller
     stocks = []
     for watch in watch_remnants:
@@ -131,12 +190,31 @@ def create_prices(watch_remnants, offer_ids):
 
 
 def price_conversion(price: str) -> str:
-    """Преобразовать цену. Пример: 5'990.00 руб. -> 5990"""
+    """Converts the price to an integer.
+    
+    Args:
+        price (str): the date of the price to be converted.
+        
+    Returns:
+        Returns the converted price string.
+        
+    Example:
+        >>> print(price_conversion("5'990.00 руб."))
+        "5990"
+    
+    """
+
     return re.sub("[^0-9]", "", price.split(".")[0])
 
 
 def divide(lst: list, n: int):
-    """Разделить список lst на части по n элементов"""
+    """Divide the list into n elements.
+
+    Args:
+        lst (list): the list that needs to be divided.
+        n (int): the number of elements for each iteration of the division.
+
+    """
     for i in range(0, len(lst), n):
         yield lst[i : i + n]
 
