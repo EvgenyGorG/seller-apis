@@ -11,7 +11,7 @@ import requests
 logger = logging.getLogger(__file__)
 
 
-def get_product_list(last_id, client_id, seller_token):
+def get_product_list(last_id: str, client_id: str, seller_token: str) -> list:
     """Get a list of OZON store products.
 
     Args:
@@ -21,27 +21,39 @@ def get_product_list(last_id, client_id, seller_token):
         seller_token (str): OZON API Key.
 
     Returns:
-        Returns the result as a list of products.
+        list: Returns the result as a list of products.
 
-        {
-            "result": {
-                "items": [
-                    {
-                        "product_id": 223681945,
-                        "offer_id": "136748"
-                    }
-                ],
-                "total": 1,
-                "last_id": "bnVсbA=="
+    Example:
+        Request:
+
+            {
+                "filter": {
+                    "offer_id": [
+                        "136748"
+                    ],
+                    "product_id": [
+                        "223681945"
+                    ],
+                    "visibility": "ALL"
+                },
+                "last_id": "",
+                "limit": 100
             }
-        }
 
-    Raises:
-        Code 400: Invalid parameter.
-        Code 403: Access denied.
-        Code 404: The answer was not found.
-        Code 409: Request conflict.
-        Code 500: Inside server error.
+        Response:
+
+            {
+                "result": {
+                    "items": [
+                        {
+                            "product_id": 223681945,
+                            "offer_id": "136748"
+                        }
+                    ],
+                    "total": 1,
+                    "last_id": "bnVсbA=="
+                }
+            }
 
     """
 
@@ -63,7 +75,7 @@ def get_product_list(last_id, client_id, seller_token):
     return response_object.get("result")
 
 
-def get_offer_ids(client_id, seller_token)
+def get_offer_ids(client_id: str, seller_token: str) -> list:
     """Get the IDs of the OZON store's products.
 
     Args:
@@ -71,7 +83,7 @@ def get_offer_ids(client_id, seller_token)
         seller_token (str): OZON API Key.
 
     Returns:
-        Returns a list of product IDs.
+        list: Returns a list of product IDs.
 
     """
 
@@ -90,8 +102,53 @@ def get_offer_ids(client_id, seller_token)
     return offer_ids
 
 
-def update_price(prices: list, client_id, seller_token):
-    """Обновить цены товаров"""
+def update_price(prices: list, client_id: str, seller_token: str) -> str:
+    """Update prices for the OZON trading platform.
+
+    Args:
+        prices (list): List with actual prices.
+        client_id (str): OZON API client ID.
+        seller_token (str): OZON API Key.
+
+    Returns:
+        str: Returns update data of prices.
+
+    Example:
+        Request:
+
+            {
+                "prices": [
+                    {
+                        "auto_action_enabled": "UNKNOWN",
+                        "currency_code": "RUB",
+                        "min_price": "800",
+                        "min_price_for_auto_actions_enabled": true,
+                        "offer_id": "",
+                        "old_price": "0",
+                        "price": "1448",
+                        "price_strategy_enabled": "UNKNOWN",
+                        "product_id": 1386,
+                        "quant_size": 1,
+                        "vat": "0.1"
+                    }
+                ]
+            }
+
+        Response:
+
+            {
+                "result": [
+                    {
+                        "product_id": 55946,
+                        "offer_id": "PG-2404С1",
+                        "updated": true,
+                        "errors": []
+                    }
+                ]
+            }
+
+    """
+
     url = "https://api-seller.ozon.ru/v1/product/import/prices"
     headers = {
         "Client-Id": client_id,
@@ -103,8 +160,45 @@ def update_price(prices: list, client_id, seller_token):
     return response.json()
 
 
-def update_stocks(stocks: list, client_id, seller_token):
-    """Обновить остатки"""
+def update_stocks(stocks: list, client_id: str, seller_token: str) -> str:
+    """Update watch stocks.
+
+    Args:
+        stocks (list): Old list with watch stocks.
+        client_id (str): OZON API client ID.
+        seller_token (str): OZON API Key.
+
+    Returns:
+        str: Returns update data of stocks.
+
+    Example:
+        Request:
+
+            {
+                "stocks": [
+                    {
+                        "offer_id": "PG-2404С1",
+                        "product_id": 55946,
+                        "stock": 4
+                    }
+                ]
+            }
+
+        Response:
+
+        {
+            "result": [
+            {
+                "product_id": 55946,
+                "offer_id": "PG-2404С1",
+                "updated": true,
+                "errors": []
+            }
+            ]
+        }
+
+    """
+
     url = "https://api-seller.ozon.ru/v1/product/import/stocks"
     headers = {
         "Client-Id": client_id,
@@ -116,13 +210,14 @@ def update_stocks(stocks: list, client_id, seller_token):
     return response.json()
 
 
-def download_stock():
+def download_stock() -> dict:
     """Downloads the leftover file.
 
     Returns:
-        Returns a dict of watch remnants.
+        dict: Returns a watch remnants.
 
     """
+
     # Скачать остатки с сайта
     casio_url = "https://timeworld.ru/upload/files/ostatki.zip"
     session = requests.Session()
@@ -142,7 +237,7 @@ def download_stock():
     return watch_remnants
 
 
-def create_stocks(watch_remnants, offer_ids):
+def create_stocks(watch_remnants: dict, offer_ids: list) -> list:
     """Create a stock list.
 
     Args:
@@ -151,7 +246,7 @@ def create_stocks(watch_remnants, offer_ids):
         offer_ids (list): list of product IDs.
 
     Returns:
-        Returns a list of stocks.
+        list: Returns a stocks.
 
     """
 
@@ -174,7 +269,18 @@ def create_stocks(watch_remnants, offer_ids):
     return stocks
 
 
-def create_prices(watch_remnants, offer_ids):
+def create_prices(watch_remnants: dict, offer_ids: list) -> list:
+    """Create prices for the OZON trading platform.
+
+    Args:
+        watch_remnants (dict): Number of remaining watch on the site.
+        offer_ids (list): List of product IDs.
+
+    Returns:
+        list: Returns a list of prices.
+
+    """
+
     prices = []
     for watch in watch_remnants:
         if str(watch.get("Код")) in offer_ids:
@@ -196,7 +302,7 @@ def price_conversion(price: str) -> str:
         price (str): the date of the price to be converted.
         
     Returns:
-        Returns the converted price string.
+        str: Returns the converted price string.
         
     Example:
         >>> print(price_conversion("5'990.00 руб."))
@@ -207,19 +313,34 @@ def price_conversion(price: str) -> str:
     return re.sub("[^0-9]", "", price.split(".")[0])
 
 
-def divide(lst: list, n: int):
+def divide(lst: list, n: int) -> list:
     """Divide the list into n elements.
 
     Args:
-        lst (list): the list that needs to be divided.
-        n (int): the number of elements for each iteration of the division.
+        lst (list): The list that needs to be divided.
+        n (int): The number of elements for each iteration of the division.
+
+    Yields:
+        list: Returns a next list of values with a range of n.
 
     """
+
     for i in range(0, len(lst), n):
         yield lst[i : i + n]
 
 
-async def upload_prices(watch_remnants, client_id, seller_token):
+async def upload_prices(watch_remnants: dict, client_id: str, seller_token: str) -> list:
+    """Upload actual prices.
+
+    Args:
+        watch_remnants (dict): Number of remaining watch on the site.
+        client_id (str): OZON API client ID.
+        seller_token (str): OZON API Key.
+
+    Returns:
+        list: Returns a list of prices.
+
+    """
     offer_ids = get_offer_ids(client_id, seller_token)
     prices = create_prices(watch_remnants, offer_ids)
     for some_price in list(divide(prices, 1000)):
@@ -227,7 +348,19 @@ async def upload_prices(watch_remnants, client_id, seller_token):
     return prices
 
 
-async def upload_stocks(watch_remnants, client_id, seller_token):
+async def upload_stocks(watch_remnants: dict, client_id: str, seller_token: str)  -> list:
+    """Upload actual stocks.
+
+    Args:
+        watch_remnants (dict): Number of remaining watch on the site.
+        client_id (str): OZON API client ID.
+        seller_token (str): OZON API Key.
+
+    Returns:
+        not_empty (list): Returns a list of non-zero stocks.
+        stocks (list): Returns a list of actual stocks.
+
+    """
     offer_ids = get_offer_ids(client_id, seller_token)
     stocks = create_stocks(watch_remnants, offer_ids)
     for some_stock in list(divide(stocks, 100)):
