@@ -55,6 +55,9 @@ def get_product_list(last_id: str, client_id: str, seller_token: str) -> list:
                 }
             }
 
+    Raises:
+        Requests.exceptions.HTTPError
+
     """
 
     url = "https://api-seller.ozon.ru/v2/product/list"
@@ -147,6 +150,9 @@ def update_price(prices: list, client_id: str, seller_token: str) -> str:
                 ]
             }
 
+    Raises:
+        Requests.exceptions.HTTPError
+
     """
 
     url = "https://api-seller.ozon.ru/v1/product/import/prices"
@@ -196,6 +202,9 @@ def update_stocks(stocks: list, client_id: str, seller_token: str) -> str:
             }
             ]
         }
+
+    Raises:
+        Requests.exceptions.HTTPError
 
     """
 
@@ -348,7 +357,7 @@ async def upload_prices(watch_remnants: dict, client_id: str, seller_token: str)
     return prices
 
 
-async def upload_stocks(watch_remnants: dict, client_id: str, seller_token: str)  -> list:
+async def upload_stocks(watch_remnants: dict, client_id: str, seller_token: str):
     """Upload actual stocks.
 
     Args:
