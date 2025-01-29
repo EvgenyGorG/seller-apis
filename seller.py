@@ -350,6 +350,7 @@ async def upload_prices(watch_remnants: dict, client_id: str, seller_token: str)
         list: Returns a list of prices.
 
     """
+
     offer_ids = get_offer_ids(client_id, seller_token)
     prices = create_prices(watch_remnants, offer_ids)
     for some_price in list(divide(prices, 1000)):
@@ -370,6 +371,7 @@ async def upload_stocks(watch_remnants: dict, client_id: str, seller_token: str)
         stocks (list): Returns a list of actual stocks.
 
     """
+
     offer_ids = get_offer_ids(client_id, seller_token)
     stocks = create_stocks(watch_remnants, offer_ids)
     for some_stock in list(divide(stocks, 100)):
