@@ -10,7 +10,22 @@ from seller import divide, price_conversion
 logger = logging.getLogger(__file__)
 
 
-def get_product_list(page, campaign_id, access_token):
+def get_product_list(page: str, campaign_id: str, access_token: str) -> str:
+    """Get a list of yandex market store products.
+
+    Args:
+        page (str): Product page.
+        campaign_id (str): The campaign ID in the API.
+        access_token (str): Yandex market API Key.
+
+    Returns:
+        str: Returns the information of products.
+
+    Raises:
+        Requests.exceptions.HTTPError
+
+    """
+
     endpoint_url = "https://api.partner.market.yandex.ru/"
     headers = {
         "Content-Type": "application/json",
@@ -29,7 +44,22 @@ def get_product_list(page, campaign_id, access_token):
     return response_object.get("result")
 
 
-def update_stocks(stocks, campaign_id, access_token):
+def update_stocks(stocks: list, campaign_id: str, access_token: str) -> str:
+    """Update watch stocks.
+
+    Args:
+        stocks (list): Old list with watch stocks.
+        campaign_id (str): The campaign ID in the API.
+        access_token (str): Yandex market API Key.
+
+    Returns:
+        str: Updated information about stocks.
+
+    Raises:
+        Requests.exceptions.HTTPError
+
+    """
+
     endpoint_url = "https://api.partner.market.yandex.ru/"
     headers = {
         "Content-Type": "application/json",
@@ -45,7 +75,22 @@ def update_stocks(stocks, campaign_id, access_token):
     return response_object
 
 
-def update_price(prices, campaign_id, access_token):
+def update_price(prices: list, campaign_id: str, access_token: str) -> str:
+    """Update prices for the Yandex market.
+
+    Args:
+        prices (list): List with actual prices.
+        campaign_id (str): The campaign ID in the API.
+        access_token (str): Yandex market API Key.
+
+    Returns:
+        str: Returns update data of prices.
+
+    Raises:
+        Requests.exceptions.HTTPError
+
+    """
+
     endpoint_url = "https://api.partner.market.yandex.ru/"
     headers = {
         "Content-Type": "application/json",
@@ -61,8 +106,18 @@ def update_price(prices, campaign_id, access_token):
     return response_object
 
 
-def get_offer_ids(campaign_id, market_token):
-    """Получить артикулы товаров Яндекс маркета"""
+def get_offer_ids(campaign_id: str, market_token: str) -> list:
+    """Get the articles of the Yandex market products.
+
+    Args:
+        campaign_id (str): The campaign ID in the API.
+        market_token (str): Yandex market API Key.
+
+    Returns:
+        list: Returns a list of product IDs.
+
+    """
+
     page = ""
     product_list = []
     while True:
@@ -77,7 +132,20 @@ def get_offer_ids(campaign_id, market_token):
     return offer_ids
 
 
-def create_stocks(watch_remnants, offer_ids, warehouse_id):
+def create_stocks(watch_remnants: dict, offer_ids: list, warehouse_id: str) -> list:
+    """Create a stock list.
+
+    Args:
+        watch_remnants (dict): Dictionary with the number
+            of remaining watch on the site.
+        offer_ids (list): List of product IDs.
+        warehouse_id (str): Warehouse ID.
+
+    Returns:
+        list: Returns a stocks.
+
+    """
+
     # Уберем то, что не загружено в market
     stocks = list()
     date = str(datetime.datetime.utcnow().replace(microsecond=0).isoformat() + "Z")
@@ -122,7 +190,18 @@ def create_stocks(watch_remnants, offer_ids, warehouse_id):
     return stocks
 
 
-def create_prices(watch_remnants, offer_ids):
+def create_prices(watch_remnants: dict, offer_ids: list) -> list:
+    """Create a list of prices for products.
+
+    Args:
+        watch_remnants (dict): Number of remaining watch on the site.
+        offer_ids (list): List of product IDs.
+
+    Returns:
+        list: Returns a list of prices.
+
+    """
+
     prices = []
     for watch in watch_remnants:
         if str(watch.get("Код")) in offer_ids:
@@ -142,7 +221,19 @@ def create_prices(watch_remnants, offer_ids):
     return prices
 
 
-async def upload_prices(watch_remnants, campaign_id, market_token):
+async def upload_prices(watch_remnants: dict, campaign_id: str, market_token: str) -> list:
+    """Upload actual prices.
+
+    Args:
+        watch_remnants (dict): Number of remaining watch on the site.
+        campaign_id (str): The campaign ID in the API.
+        market_token (str): Yandex market API Key.
+
+    Returns:
+        list: Returns a list of prices.
+
+    """
+
     offer_ids = get_offer_ids(campaign_id, market_token)
     prices = create_prices(watch_remnants, offer_ids)
     for some_prices in list(divide(prices, 500)):
@@ -150,7 +241,21 @@ async def upload_prices(watch_remnants, campaign_id, market_token):
     return prices
 
 
-async def upload_stocks(watch_remnants, campaign_id, market_token, warehouse_id):
+async def upload_stocks(watch_remnants: dict, campaign_id: str, market_token: str, warehouse_id: str):
+    """Upload actual stocks.
+
+    Args:
+        watch_remnants (dict): Number of remaining watch on the site.
+        campaign_id (str): The campaign ID in the API.
+        market_token (str): Yandex market API Key.
+        warehouse_id (str): Warehouse ID.
+
+    Returns:
+        not_empty (list): Returns a list of non-zero stocks.
+        stocks (list): Returns a list of actual stocks.
+
+    """
+
     offer_ids = get_offer_ids(campaign_id, market_token)
     stocks = create_stocks(watch_remnants, offer_ids, warehouse_id)
     for some_stock in list(divide(stocks, 2000)):
