@@ -10,7 +10,7 @@ from seller import divide, price_conversion
 logger = logging.getLogger(__file__)
 
 
-def get_product_list(page: str, campaign_id: str, access_token: str) -> str:
+def get_product_list(page: str, campaign_id: str, access_token: str) -> dict:
     """Get a list of yandex market store products.
 
     Args:
@@ -19,7 +19,7 @@ def get_product_list(page: str, campaign_id: str, access_token: str) -> str:
         access_token (str): Yandex market API Key.
 
     Returns:
-        str: Returns the information of products.
+        dict: Returns the information of products.
 
     Raises:
         Requests.exceptions.HTTPError
@@ -44,7 +44,7 @@ def get_product_list(page: str, campaign_id: str, access_token: str) -> str:
     return response_object.get("result")
 
 
-def update_stocks(stocks: list, campaign_id: str, access_token: str) -> str:
+def update_stocks(stocks: list, campaign_id: str, access_token: str) -> dict:
     """Update watch stocks.
 
     Args:
@@ -53,7 +53,7 @@ def update_stocks(stocks: list, campaign_id: str, access_token: str) -> str:
         access_token (str): Yandex market API Key.
 
     Returns:
-        str: Updated information about stocks.
+        dict: Updated information about stocks.
 
     Raises:
         Requests.exceptions.HTTPError
@@ -75,7 +75,7 @@ def update_stocks(stocks: list, campaign_id: str, access_token: str) -> str:
     return response_object
 
 
-def update_price(prices: list, campaign_id: str, access_token: str) -> str:
+def update_price(prices: list, campaign_id: str, access_token: str) -> dict:
     """Update prices for the Yandex market.
 
     Args:
@@ -84,7 +84,7 @@ def update_price(prices: list, campaign_id: str, access_token: str) -> str:
         access_token (str): Yandex market API Key.
 
     Returns:
-        str: Returns update data of prices.
+        dict: Returns update data of prices.
 
     Raises:
         Requests.exceptions.HTTPError
