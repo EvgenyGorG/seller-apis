@@ -11,8 +11,8 @@ import requests
 logger = logging.getLogger(__file__)
 
 
-def get_product_list(last_id: str, client_id: str, seller_token: str) -> list:
-    """Get a list of OZON store products.
+def get_product_list(last_id: str, client_id: str, seller_token: str) -> dict:
+    """Get information about OZON store products.
 
     Args:
         last_id (str): ID of the last value on the page.
@@ -21,7 +21,7 @@ def get_product_list(last_id: str, client_id: str, seller_token: str) -> list:
         seller_token (str): OZON API Key.
 
     Returns:
-        list: Returns the result as a list of products.
+        dict: Returns information about OZON store products.
 
     Example:
         Request:
@@ -105,7 +105,7 @@ def get_offer_ids(client_id: str, seller_token: str) -> list:
     return offer_ids
 
 
-def update_price(prices: list, client_id: str, seller_token: str) -> str:
+def update_price(prices: list, client_id: str, seller_token: str) -> dict:
     """Update prices for the OZON trading platform.
 
     Args:
@@ -114,7 +114,7 @@ def update_price(prices: list, client_id: str, seller_token: str) -> str:
         seller_token (str): OZON API Key.
 
     Returns:
-        str: Returns update data of prices.
+        dict: Returns update data of prices.
 
     Example:
         Request:
@@ -166,7 +166,7 @@ def update_price(prices: list, client_id: str, seller_token: str) -> str:
     return response.json()
 
 
-def update_stocks(stocks: list, client_id: str, seller_token: str) -> str:
+def update_stocks(stocks: list, client_id: str, seller_token: str) -> dict:
     """Update watch stocks.
 
     Args:
@@ -175,7 +175,7 @@ def update_stocks(stocks: list, client_id: str, seller_token: str) -> str:
         seller_token (str): OZON API Key.
 
     Returns:
-        str: Returns update data of stocks.
+        dict: Returns update data of stocks.
 
     Example:
         Request:
