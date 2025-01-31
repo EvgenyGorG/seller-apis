@@ -23,38 +23,6 @@ def get_product_list(last_id: str, client_id: str, seller_token: str) -> dict:
     Returns:
         dict: Returns information about OZON store products.
 
-    Example:
-        Request:
-
-            {
-                "filter": {
-                    "offer_id": [
-                        "136748"
-                    ],
-                    "product_id": [
-                        "223681945"
-                    ],
-                    "visibility": "ALL"
-                },
-                "last_id": "",
-                "limit": 100
-            }
-
-        Response:
-
-            {
-                "result": {
-                    "items": [
-                        {
-                            "product_id": 223681945,
-                            "offer_id": "136748"
-                        }
-                    ],
-                    "total": 1,
-                    "last_id": "bnVсbA=="
-                }
-            }
-
     Raises:
         Requests.exceptions.HTTPError
 
@@ -116,40 +84,6 @@ def update_price(prices: list, client_id: str, seller_token: str) -> dict:
     Returns:
         dict: Returns update data of prices.
 
-    Example:
-        Request:
-
-            {
-                "prices": [
-                    {
-                        "auto_action_enabled": "UNKNOWN",
-                        "currency_code": "RUB",
-                        "min_price": "800",
-                        "min_price_for_auto_actions_enabled": true,
-                        "offer_id": "",
-                        "old_price": "0",
-                        "price": "1448",
-                        "price_strategy_enabled": "UNKNOWN",
-                        "product_id": 1386,
-                        "quant_size": 1,
-                        "vat": "0.1"
-                    }
-                ]
-            }
-
-        Response:
-
-            {
-                "result": [
-                    {
-                        "product_id": 55946,
-                        "offer_id": "PG-2404С1",
-                        "updated": true,
-                        "errors": []
-                    }
-                ]
-            }
-
     Raises:
         Requests.exceptions.HTTPError
 
@@ -176,32 +110,6 @@ def update_stocks(stocks: list, client_id: str, seller_token: str) -> dict:
 
     Returns:
         dict: Returns update data of stocks.
-
-    Example:
-        Request:
-
-            {
-                "stocks": [
-                    {
-                        "offer_id": "PG-2404С1",
-                        "product_id": 55946,
-                        "stock": 4
-                    }
-                ]
-            }
-
-        Response:
-
-        {
-            "result": [
-            {
-                "product_id": 55946,
-                "offer_id": "PG-2404С1",
-                "updated": true,
-                "errors": []
-            }
-            ]
-        }
 
     Raises:
         Requests.exceptions.HTTPError
